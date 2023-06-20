@@ -9,6 +9,9 @@ from airflow.providers.snowflake.operators.snowflake import SnowflakeOperator
 from pendulum import datetime
 from airflow.utils.task_group import TaskGroup
 import include.sql.tutorial_sql_statements as sql_stmts
+from astronomer.providers.snowflake.operators.snowflake import (
+    SnowflakeOperatorAsync
+)
 
 SNOWFLAKE_FORESTFIRE_TABLE = "forestfires"
 SNOWFLAKE_COST_TABLE = "costs"
@@ -58,13 +61,13 @@ with DAG(
     Insert data into the Snowflake tables using existing SQL queries
     stored in the include/sql/snowflake_examples/ directory.
     """
-    load_forestfire_data = SnowflakeOperator(
+    load_forestfire_data = SnowflakeOperatorAsync(
         task_id="load_forestfire_data",
         sql=sql_stmts.load_forestfire_data,
         params={"table_name": SNOWFLAKE_FORESTFIRE_TABLE},
     )
 
-    load_cost_data = SnowflakeOperator(
+    load_cost_data = SnowflakeOperatorAsync(
         task_id="load_cost_data",
         sql=sql_stmts.load_cost_data,
         params={"table_name": SNOWFLAKE_COST_TABLE},
